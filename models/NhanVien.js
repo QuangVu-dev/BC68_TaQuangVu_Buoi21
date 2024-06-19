@@ -1,7 +1,7 @@
 class NhanVien {
   constructor() {
     this.tknv = "";
-    this.hoTen = "";
+    this.name = "";
     this.email = "";
     this.password = "";
     this.datepicker = "";
@@ -12,15 +12,14 @@ class NhanVien {
     this.loaiNhanVien = this.xacDinhLoaiNhanVien();
   }
   tinhTongLuong() {
-    let heSo;
-    if (this.chucVu === "Giám đốc") {
-      heSo = 3;
-    } else if (this.chucVu === "Trưởng Phòng") {
-      heSo = 2;
-    } else {
-      heSo = 1;
+    switch (this.chucVu) {
+      case "Sếp":
+        return this.luongCB * 3;
+      case "Trưởng phòng":
+        return this.luongCB * 2;
+      case "Nhân viên":
+        return this.luongCB;
     }
-    return this.luongCB * heSo;
   }
 
   xacDinhLoaiNhanVien() {
@@ -31,7 +30,7 @@ class NhanVien {
     } else if (this.gioLam >= 160) {
       return "Khá";
     } else {
-      return "Trung Bình";
+      return "Trung bình";
     }
   }
 }
