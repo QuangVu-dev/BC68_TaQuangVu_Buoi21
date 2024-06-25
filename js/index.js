@@ -9,9 +9,9 @@ function getValueForm() {
     nhanVien[id] = value;
     let errorField =
       field.parentElement.parentElement.querySelector(".sp-thongbao");
-    if (!checkEmptyValue(field.value.trim(), errorField)) {
-      isValid = false;
-    }
+    // if (!checkEmptyValue(field.value.trim(), errorField)) {
+    //   isValid = false;
+    // }  ============= Cụm xài hàm này bị lặp lại bên dưới r nè
     let check = checkEmptyValue(value, errorField);
     isValid &= check;
     if (check && id == "tknv") {
@@ -47,15 +47,16 @@ function getValueForm() {
 document.getElementById("formQLNV").onsubmit = function (event) {
   event.preventDefault();
   let nhanVien = getValueForm();
-  // Thêm nhân viên vào mảng
-  arrNhanVien.push(nhanVien);
+  console.log(nhanVien);
 
-  // Chạy hàm hiển thị renderArrNhanVien để hiển thị dữ liệu
-  renderArrNhanVien();
-  saveLocalStorage();
-  // // xoá toàn bộ dữ liệu đang có trong form
-  document.getElementById("formQLNV").reset();
-  console.log(arrNhanVien);
+  if (nhanVien) {
+    arrNhanVien.push(nhanVien);
+    // Chạy hàm hiển thị renderArrNhanVien để hiển thị dữ liệu
+    renderArrNhanVien();
+    saveLocalStorage();
+    // // xoá toàn bộ dữ liệu đang có trong form
+    document.getElementById("formQLNV").reset();
+  }
 };
 
 // Hiển thị dữ liệu sinh viên lên giao diện
@@ -106,7 +107,6 @@ function deleteNhanVien(tknv) {
   let index = arrNhanVien.findIndex((item, index) => {
     return item !== null && item.tknv == tknv;
   });
-  console.log(index);
   if (index != -1) {
     arrNhanVien.splice(index, 1);
     renderArrNhanVien();
@@ -151,10 +151,21 @@ function searchNhanVien(event) {
     event.target.value.toLowerCase().trim()
   );
   console.log("Keyword:", newKeyWord);
-  let arrNhanVienFilter = arrNhanVien.filter((item, index) => {
-    if (item && item.loaiNhanVien) {
+
+  // ============= Nếu bạn sử dụng class NhanVien như mentor đang làm thì cần làm thêm phần bên dưới để nhận hàm từ class, vì từng phần tử của arrNhanVien hien tai ko chua phuong thuc tinhTongLuong,xacDinhLoaiNhanVien
+  let newArrNhanVien = [];
+  for (let nhanVien of arrNhanVien) {
+    let newNhanVien = new NhanVien();
+    Object.assign(newNhanVien, nhanVien);
+    newArrNhanVien.push(newNhanVien);
+  }
+  // ============= Kết thúc phần thêm
+
+  let arrNhanVienFilter = newArrNhanVien.filter((item, index) => {
+    if (item && item.xacDinhLoaiNhanVien()) {
+      // ============= Khúc này lọc theo phương thức xacDinhLoaiNhanVien()
       let newXepLoaiNhanVien = removeVietnameseTones(
-        item.loaiNhanVien.toLowerCase().trim()
+        item.xacDinhLoaiNhanVien().toLowerCase().trim()
       );
       console.log("Xep loai nhan vien:", newXepLoaiNhanVien);
       return newXepLoaiNhanVien.includes(newKeyWord);
@@ -167,3 +178,5 @@ function searchNhanVien(event) {
 
 // oninput
 document.getElementById("searchName").oninput = searchNhanVien;
+
+// Đầu tiên, check phần tạo người dùng, thì hàm getValueForm đang trả về null nè
