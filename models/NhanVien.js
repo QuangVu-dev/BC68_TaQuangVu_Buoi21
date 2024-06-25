@@ -8,9 +8,8 @@ class NhanVien {
     this.luongCB = "";
     this.chucVu = "";
     this.gioLam = "";
-    this.tongLuong = this.tinhTongLuong();
-    this.loaiNhanVien = this.xacDinhLoaiNhanVien();
   }
+
   tinhTongLuong() {
     switch (this.chucVu) {
       case "Sếp":
@@ -18,7 +17,9 @@ class NhanVien {
       case "Trưởng phòng":
         return this.luongCB * 2;
       case "Nhân viên":
-        return this.luongCB;
+        return this.luongCB * 1;
+      case "":
+        return this.luongCB * 0;
     }
   }
 
